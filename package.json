@@ -1,0 +1,22 @@
+{
+  "name": "crypto-portfolio-tracker",
+  "version": "1.0.0",
+  "description": "A simple cryptocurrency portfolio tracking application",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "dev": "live-server"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "portfolio",
+    "tracker",
+    "bitcoin",
+    "ethereum"
+  ],
+  "author": "LoriAnders",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
