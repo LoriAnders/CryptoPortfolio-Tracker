@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Portfolio Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Crypto Portfolio Tracker</h1>
+            <p>Track your cryptocurrency investments in real-time</p>
+        </header>
+
+        <main>
+            <section class="add-holding">
+                <h2>Add New Holding</h2>
+                <form id="add-holding-form">
+                    <div class="form-group">
+                        <label for="crypto-select">Cryptocurrency:</label>
+                        <select id="crypto-select" required>
+                            <option value="">Select a cryptocurrency</option>
+                            <option value="bitcoin">Bitcoin (BTC)</option>
+                            <option value="ethereum">Ethereum (ETH)</option>
+                            <option value="binancecoin">Binance Coin (BNB)</option>
+                            <option value="cardano">Cardano (ADA)</option>
+                            <option value="solana">Solana (SOL)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount:</label>
+                        <input type="number" id="amount" step="0.00000001" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purchase-price">Purchase Price (USD):</label>
+                        <input type="number" id="purchase-price" step="0.01" min="0" required>
+                    </div>
+                    <button type="submit">Add to Portfolio</button>
+                </form>
+            </section>
+
+            <section class="portfolio-summary">
+                <h2>Portfolio Summary</h2>
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>Total Value</h3>
+                        <span id="total-value">$0.00</span>
+                    </div>
+                    <div class="card">
+                        <h3>Total P&L</h3>
+                        <span id="total-pnl">$0.00</span>
+                    </div>
+                    <div class="card">
+                        <h3>Total Holdings</h3>
+                        <span id="total-holdings">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="holdings-list">
+                <h2>Your Holdings</h2>
+                <div id="holdings-container">
+                    <p class="empty-state">No holdings yet. Add your first cryptocurrency above!</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
