@@ -19,12 +19,50 @@ class CryptoPortfolio {
 
     async fetchPrices() {
         try {
+            this.showLoadingState(true);
             const cryptoIds = ['bitcoin', 'ethereum', 'binancecoin', 'cardano', 'solana'];
             const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds.join(',')}&vs_currencies=usd`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             this.prices = await response.json();
             this.updateDisplay();
+            this.showErrorMessage(false);
         } catch (error) {
             console.error('Error fetching prices:', error);
+            this.showErrorMessage(true, 'Failed to fetch current prices. Please try again later.');
+        } finally {
+            this.showLoadingState(false);
+        }
+    }
+
+    showLoadingState(isLoading) {
+        const summaryCards = document.querySelectorAll('.card span');
+        summaryCards.forEach(card => {
+            if (isLoading) {
+                card.style.opacity = '0.5';
+            } else {
+                card.style.opacity = '1';
+            }
+        });
+    }
+
+    showErrorMessage(show, message = '') {
+        let errorDiv = document.getElementById('error-message');
+        
+        if (show && !errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'error-message';
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('main'));
+        } else if (show && errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        } else if (!show && errorDiv) {
+            errorDiv.style.display = 'none';
         }
     }
 
