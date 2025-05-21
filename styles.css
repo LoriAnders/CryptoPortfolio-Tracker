@@ -144,9 +144,37 @@ button:hover {
     grid-column: span 2;
 }
 
-.holdings-list h2 {
+.holdings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.holdings-list h2 {
+    margin: 0;
     color: #2d3748;
+}
+
+.export-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.export-btn {
+    background-color: #68d391;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.export-btn:hover {
+    background-color: #48bb78;
 }
 
 #holdings-container {

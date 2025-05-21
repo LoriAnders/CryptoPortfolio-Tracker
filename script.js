@@ -15,12 +15,21 @@ class CryptoPortfolio {
     bindEvents() {
         const form = document.getElementById('add-holding-form');
         form.addEventListener('submit', (e) => this.handleAddHolding(e));
+        
+        const csvBtn = document.getElementById('export-csv');
+        const jsonBtn = document.getElementById('export-json');
+        csvBtn.addEventListener('click', () => this.exportData('csv'));
+        jsonBtn.addEventListener('click', () => this.exportData('json'));
     }
 
     async fetchPrices() {
         try {
             this.showLoadingState(true);
-            const cryptoIds = ['bitcoin', 'ethereum', 'binancecoin', 'cardano', 'solana'];
+            const cryptoIds = [
+                'bitcoin', 'ethereum', 'binancecoin', 'cardano', 'solana', 
+                'ripple', 'polkadot', 'dogecoin', 'avalanche-2', 'chainlink',
+                'polygon', 'litecoin', 'uniswap', 'cosmos', 'algorand'
+            ];
             const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds.join(',')}&vs_currencies=usd`);
             
             if (!response.ok) {
@@ -136,7 +145,17 @@ class CryptoPortfolio {
             ethereum: 'Ethereum',
             binancecoin: 'Binance Coin',
             cardano: 'Cardano',
-            solana: 'Solana'
+            solana: 'Solana',
+            ripple: 'Ripple',
+            polkadot: 'Polkadot',
+            dogecoin: 'Dogecoin',
+            'avalanche-2': 'Avalanche',
+            chainlink: 'Chainlink',
+            polygon: 'Polygon',
+            litecoin: 'Litecoin',
+            uniswap: 'Uniswap',
+            cosmos: 'Cosmos',
+            algorand: 'Algorand'
         };
 
         const cryptoSymbols = {
@@ -144,7 +163,17 @@ class CryptoPortfolio {
             ethereum: 'ETH',
             binancecoin: 'BNB',
             cardano: 'ADA',
-            solana: 'SOL'
+            solana: 'SOL',
+            ripple: 'XRP',
+            polkadot: 'DOT',
+            dogecoin: 'DOGE',
+            'avalanche-2': 'AVAX',
+            chainlink: 'LINK',
+            polygon: 'MATIC',
+            litecoin: 'LTC',
+            uniswap: 'UNI',
+            cosmos: 'ATOM',
+            algorand: 'ALGO'
         };
 
         return `
@@ -191,6 +220,114 @@ class CryptoPortfolio {
         if (this.holdings.length > 0) {
             this.loadHoldings();
         }
+    }
+
+    exportData(format) {
+        if (this.holdings.length === 0) {
+            alert('No holdings to export');
+            return;
+        }
+
+        const cryptoNames = {
+            bitcoin: 'Bitcoin',
+            ethereum: 'Ethereum',
+            binancecoin: 'Binance Coin',
+            cardano: 'Cardano',
+            solana: 'Solana',
+            ripple: 'Ripple',
+            polkadot: 'Polkadot',
+            dogecoin: 'Dogecoin',
+            'avalanche-2': 'Avalanche',
+            chainlink: 'Chainlink',
+            polygon: 'Polygon',
+            litecoin: 'Litecoin',
+            uniswap: 'Uniswap',
+            cosmos: 'Cosmos',
+            algorand: 'Algorand'
+        };
+
+        const cryptoSymbols = {
+            bitcoin: 'BTC',
+            ethereum: 'ETH',
+            binancecoin: 'BNB',
+            cardano: 'ADA',
+            solana: 'SOL',
+            ripple: 'XRP',
+            polkadot: 'DOT',
+            dogecoin: 'DOGE',
+            'avalanche-2': 'AVAX',
+            chainlink: 'LINK',
+            polygon: 'MATIC',
+            litecoin: 'LTC',
+            uniswap: 'UNI',
+            cosmos: 'ATOM',
+            algorand: 'ALGO'
+        };
+
+        const exportData = this.holdings.map(holding => {
+            const currentPrice = this.prices[holding.cryptoId]?.usd || 0;
+            const currentValue = holding.amount * currentPrice;
+            const totalCost = holding.amount * holding.purchasePrice;
+            const pnl = currentValue - totalCost;
+            const pnlPercentage = totalCost > 0 ? ((pnl / totalCost) * 100) : 0;
+
+            return {
+                name: cryptoNames[holding.cryptoId],
+                symbol: cryptoSymbols[holding.cryptoId],
+                amount: holding.amount,
+                purchasePrice: holding.purchasePrice,
+                currentPrice: currentPrice,
+                currentValue: currentValue,
+                totalCost: totalCost,
+                profitLoss: pnl,
+                profitLossPercentage: pnlPercentage,
+                dateAdded: new Date(holding.dateAdded).toLocaleDateString()
+            };
+        });
+
+        if (format === 'csv') {
+            this.downloadCSV(exportData);
+        } else if (format === 'json') {
+            this.downloadJSON(exportData);
+        }
+    }
+
+    downloadCSV(data) {
+        const headers = ['Name', 'Symbol', 'Amount', 'Purchase Price', 'Current Price', 'Current Value', 'Total Cost', 'Profit/Loss', 'P&L %', 'Date Added'];
+        const csvContent = [
+            headers.join(','),
+            ...data.map(row => [
+                row.name,
+                row.symbol,
+                row.amount,
+                row.purchasePrice.toFixed(2),
+                row.currentPrice.toFixed(2),
+                row.currentValue.toFixed(2),
+                row.totalCost.toFixed(2),
+                row.profitLoss.toFixed(2),
+                row.profitLossPercentage.toFixed(2),
+                row.dateAdded
+            ].join(','))
+        ].join('\n');
+
+        this.downloadFile(csvContent, 'crypto-portfolio.csv', 'text/csv');
+    }
+
+    downloadJSON(data) {
+        const jsonContent = JSON.stringify(data, null, 2);
+        this.downloadFile(jsonContent, 'crypto-portfolio.json', 'application/json');
+    }
+
+    downloadFile(content, filename, contentType) {
+        const blob = new Blob([content], { type: contentType });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     }
 }
 

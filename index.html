@@ -26,6 +26,16 @@
                             <option value="binancecoin">Binance Coin (BNB)</option>
                             <option value="cardano">Cardano (ADA)</option>
                             <option value="solana">Solana (SOL)</option>
+                            <option value="ripple">Ripple (XRP)</option>
+                            <option value="polkadot">Polkadot (DOT)</option>
+                            <option value="dogecoin">Dogecoin (DOGE)</option>
+                            <option value="avalanche-2">Avalanche (AVAX)</option>
+                            <option value="chainlink">Chainlink (LINK)</option>
+                            <option value="polygon">Polygon (MATIC)</option>
+                            <option value="litecoin">Litecoin (LTC)</option>
+                            <option value="uniswap">Uniswap (UNI)</option>
+                            <option value="cosmos">Cosmos (ATOM)</option>
+                            <option value="algorand">Algorand (ALGO)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -59,7 +69,13 @@
             </section>
 
             <section class="holdings-list">
-                <h2>Your Holdings</h2>
+                <div class="holdings-header">
+                    <h2>Your Holdings</h2>
+                    <div class="export-buttons">
+                        <button id="export-csv" class="export-btn">Export CSV</button>
+                        <button id="export-json" class="export-btn">Export JSON</button>
+                    </div>
+                </div>
                 <div id="holdings-container">
                     <p class="empty-state">No holdings yet. Add your first cryptocurrency above!</p>
                 </div>
