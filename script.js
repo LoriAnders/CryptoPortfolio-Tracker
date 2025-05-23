@@ -38,6 +38,7 @@ class CryptoPortfolio {
             
             this.prices = await response.json();
             this.updateDisplay();
+            this.updateLastUpdateTime();
             this.showErrorMessage(false);
         } catch (error) {
             console.error('Error fetching prices:', error);
@@ -220,6 +221,12 @@ class CryptoPortfolio {
         if (this.holdings.length > 0) {
             this.loadHoldings();
         }
+    }
+
+    updateLastUpdateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        document.getElementById('last-update').textContent = `Last updated: ${timeString}`;
     }
 
     exportData(format) {
